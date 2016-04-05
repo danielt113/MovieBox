@@ -1,0 +1,117 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>MovieBox</title>
+		
+		<!-- Needed to make drop down menu work, from: http://stackoverflow.com/questions/13284083/ie10-renders-in-ie7-mode-how-to-force-standards-mode -->
+		<meta http-equiv="X-UA-Compatible" content="IE=10" />
+		
+		<!-- AJAX library -->
+		<script src="jquery.min.js"></script>
+		
+		<link type="text/css" rel="stylesheet" href="stylesheet.css"></link>
+		<script type="text/javascript" language="javascript" src="Main.js"></script>
+		<script type="text/javascript" language="javascript" src="Main2.js"></script>
+		<script type="text/javascript" language="javascript" src="Query.js"></script>
+		<script type="text/javascript" language="javascript" src="QueryShow.js"></script>
+		<script type="text/javascript" language="javascript" src="Xml.js"></script>
+		<script type="text/vbscript" language="vbscript" src="FolderPicker.vb"></script>
+	</head>
+
+	<body>
+		<ul id="menu">
+			<li id="sort" disabled ><a class="not-allowed" href="#">Sort</a> <div  class="not-allowed MenuArrow-light"></div>
+				<ul class="sub-menu">
+					<li><a onclick="selectSort(this)" href="#">Alpha</a><small id="cmSort">&nbsp;&#10003;</small></li>
+					<li><a onclick="selectSort(this)" href="#">Date</a></li>
+					<li><a onclick="selectSort(this)" href="#">Genre</a></li>
+					<!-- <li><a onclick="selectSort(this)" href="#">Recent</a></li> -->
+				</ul>
+			</li>
+			<li id="settings"><a href="#" onclick="openSettings()">Settings</a>
+			</li>
+
+			<li><a href="#" onclick="resetMovieData()" id="btnAbout">Reset</a></div>
+			</li>
+			<li id="search" disabled><label id="searchBoxLabel" class="not-allowed" for="searchBox">Search<input style="margin-left:1em;" disabled class="not-allowed" id="searchBox"  oninput="filterMovies(this);" type="text" name="textSearch" placeholder="start typing..."></label></li>
+		</ul>
+<div id="upperContainer">
+		<div id="loadingContainer">
+			<div id="loadingProgress"></div>
+		</div>
+		<div id = "aInitializeConsole">
+		
+			<h1><span id = "divDialogue"></span><small><small id="initSmall" class="muted" style=""></small></small></h1>
+			<h3 style="display:none;" id="summaryTableCaption">Summary</h3>
+			<table style="display:none;" id="summaryTable" style="margin-top:0;">
+			  <tr>
+				<th>Files</th>
+				<td id = "divInitializeFiles">0</td>
+			  </tr>
+			  <tr>
+				<th>Folders</th>
+				<td id = "divInitializeFolders">0</td>
+			  </tr>
+			  <tr>
+				<th>Movies</th>
+				<td id = "divInitializeFound">0</td>
+			  </tr>
+			  <tr>
+				<th>Shows</th>
+				<td id = "divInitializeFoundShows">0</td>
+			  </tr>
+			  <tr>
+				<th>Episodes</th>
+				<td id = "divInitializeFoundEpisodes">0</td>
+			  </tr>
+			</table>
+			<div id="divOptions" style="display:none;">
+			<p>MovieBox searches folders for movies and shows.</p>
+			<p>Tell it where to search.</p>
+			<h3>Folders</h3>
+			<table id="libraryTable" style="margin-top:0;">
+			  <tr>
+				<th>Name</th>
+				<th>Location</th>
+				<th>Enabled</th>
+				<th>Delete</th>
+			  </tr>
+			  </table>
+			  <label for="askEveryTime"><input id="askEveryTime" type="checkbox"></input> Don't ask on startup</label><br><br>
+			  <input type="button" value="Search for movies" onclick="searchForMovies(false)" class="btn-primary"></input>
+			</div>
+		</div>
+		
+		
+		<div id="divProblems" style="display:none;">
+			<h2 style="margin-top:0;padding-top:0;"><span style="cursor:pointer;" onclick="document.getElementById('problemContainer').style.display=(document.getElementById('problemContainer').style.display=='block')?'none':'block';">Summary <div class="MenuArrow"></div></span></h2>
+				<span id="problemContainer" style="display:none;">
+				<h3>Statistics</h3>
+				<span id="summaryTableDestination"></span>
+				<h3><span id="problemCount"></span> issues</h3>
+				<span id ="problemList">
+					<table style="table-layout: fixed;width:100%;word-break: break-all;" id="problemTable">
+					  <tr>
+						<th width="30%">File</th>
+						<th width="20%">Title</th>
+						<th width="30%">Request</th>
+						<th width="10%">Code</th>
+						<th width="10%">Origin</th>
+					  </tr>
+					 </table>
+				</span>
+				</span>
+		</div>
+		
+		<table style="display:none;" id="summaryTable2">
+			  <tr>
+				<th>Status</th>
+				<th>Directory</th>
+			  </tr>
+			</table>
+
+		<div style="display:none;" id ="Boxart"></div>
+	</div>
+	</body>
+
+</html>
