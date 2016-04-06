@@ -16,20 +16,19 @@
 		 
 			<xsl:sort select="string-length(substring-before(substring(translate(Title, $smallcase, $uppercase), 1 + 4*starts-with(translate(Title, $smallcase, $uppercase), 'THE ')), $searchString))" data-type="number" order="ascending"/>
 			<xsl:sort select="Title"/>
-			  <div class="CoverArt {Quality}" title="{Title}">
+					
+			  <div name="{Title}" class="CoverArt {Quality}" title="{Title}">
 				
 				<figure>
-				
-					<xsl:choose>
-						<xsl:when test="Poster!=''">
-							<img src="{Poster}" alt=""></img>
-						</xsl:when>
-						<xsl:otherwise>
-							<img src="" alt="" class="noBoxart"></img>
-						</xsl:otherwise>
-					</xsl:choose>
-					
-					<big><xsl:value-of select="Title"/></big>
+						<xsl:choose>
+							<xsl:when test="Poster!=''">
+								<img src="{Poster}" alt="{Title}"></img>
+							</xsl:when>
+							<xsl:otherwise>
+								<img src="" alt="" class="noBoxart"></img>
+							</xsl:otherwise>
+						</xsl:choose>
+					<big class="bigAlt"><xsl:value-of select="Title"/></big>
 					<figcaption>
 						<xsl:choose>
 							<xsl:when test="name(parent::*)='Movie'">

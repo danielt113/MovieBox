@@ -28,11 +28,11 @@
 							<img src="{../Poster}" alt="{.}"></img>
 						</xsl:when>
 						<xsl:otherwise>
-							<img src="" alt="{.}" class="noBoxart"></img>
+							<img style="font-size:40px;" src="" alt="" class="noBoxart"></img>
 						</xsl:otherwise>
 					</xsl:choose>
 					
-					<big><xsl:value-of select="."/></big>
+					<big class="bigAlt"><xsl:value-of select="."/></big>
 					<figcaption>
 						<xsl:choose>
 							<xsl:when test="name(parent::*)='Movie'">
