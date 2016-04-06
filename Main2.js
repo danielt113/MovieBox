@@ -215,7 +215,7 @@ function getLibraries() {
 	e = new Enumerator(objFSO.Drives);
 	for (; !e.atEnd(); e.moveNext()) {
 		d = e.item();
-		if (((d.DriveType == 1) || (d.DriveType == 2)) && (d.IsReady)) {
+		if ((d.DriveType == 1) && (d.IsReady)) {
 			if ((d.VolumeName != "") && (d.VolumeName != "System Reserved")) {
 				if (savesExist == 0) {
 					allLibraries.push(new Library(d.DriveLetter + ":\\", 1, "", "",d.VolumeName, "removable", true));

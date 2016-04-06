@@ -138,7 +138,7 @@ function handleQueryError(jqXHR, textStatus, errorThrown) {
 		document.getElementById("problemCount").innerHTML = pCount;
 		var tmpZ = ((typeof jqXHR !== "undefined") && (typeof textStatus !== "undefined")) ? jqXHR.status + ", " + textStatus:"None" ;
 		document.getElementById("problemTable").innerHTML += "<tr><td>" + 
-		'<a style="cursor:pointer;" title="' + allMovieQueries[thisIndex].sFilePath + '" onclick="exploreMov(' + "this" + ');"><b style="display:none;">' + allMovieQueries[thisIndex].sFilePath + '</b>' + allMovieQueries[thisIndex].sFilePath + '</a></td><td>' + 
+		'<a style="cursor:pointer;" title="' + allMovieQueries[thisIndex].sFilePath + '" onclick="exploreMov(' + "this" + ');">' + allMovieQueries[thisIndex].sFilePath + '</a><span style="display:none">' + allMovieQueries[thisIndex].sFilePath + '</span></td><td>' + 
 		allMovieQueries[thisIndex].sQuery  + "</td><td>" +
 		"<a href='"+ url + "'>" + url + "</a></td><td>" +
 		tmpZ + "</td><td>" +

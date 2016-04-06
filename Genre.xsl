@@ -18,20 +18,18 @@
          <xsl:for-each select="key('groups', $currentGroup)">
 			<xsl:sort select="translate(../Release,'-','')" data-type="number" order="descending"/>
 			
-			  <div class="CoverArt {../Quality}">
-				<a style="display:none">
-					<xsl:value-of select="../Filepath"/>
-				</a>
+			  <div name="{.}" class="CoverArt {../Quality}" title="{.}">
+				
 				<figure>
 					<xsl:choose>
 						<xsl:when test="../Poster!=''">
-							<img src="{../Poster}" alt=""></img>
+							<img src="{../Poster}" alt="{.}"></img>
 						</xsl:when>
 						<xsl:otherwise>
 							<img src="" alt="" class="noBoxart"></img>
 						</xsl:otherwise>
 					</xsl:choose>
-					<big><xsl:value-of select="../Title"/></big>
+					<big class="bigAlt"><xsl:value-of select="../Title"/></big>
 					<figcaption>
 						<xsl:choose>
 							<xsl:when test="name(parent::*)='Movie'">

@@ -120,6 +120,10 @@ function exploreMov(sPath) {
     try {objShell.Run('Explorer /Select,' + htmlDecode($(sPath).next().html()) + '');} 
 	catch (e) {alert("Windows could not find: " + '"' + htmlDecode($(sPath).next().html()) + '"');}
 }
+function exploreMov2(sPath) {
+    try {objShell.Run('Explorer ' + htmlDecode($(sPath).next().html()) + '');} 
+	catch (e) {alert("Windows could not find: " + '"' + htmlDecode($(sPath).next().html()) + '"');}
+}
 function expandShow(elem) {
 	var a = elem.parentNode.parentNode.parentNode.getAttribute("class");
 	if (a.indexOf("Expanded") > -1) {
@@ -342,7 +346,7 @@ function initializeMe() {
 	
 	for (var i=0; i<allLibraries.length; i++) {
 		var b = "<label class='muted' for='chk" + i + "'><input id='chk" + i + "' type='checkbox' " + ((allLibraries[i].sEnabled==1)?"checked":"") + " onchange='chkChange(this)'></input><small> (" + ((allLibraries[i].sEnabled)?"Yes":"No") + ")</small></label>"
-		var c = '<a style="cursor:pointer;" title="' + allLibraries[i].sDirectory + '" onclick="exploreMov(' + "this" + ');"><b style="display:none;">' + allLibraries[i].sDirectory + '</b>' + allLibraries[i].sDirectory;
+		var c = '<a style="cursor:pointer;" title="' + allLibraries[i].sDirectory + '" onclick="exploreMov2(' + "this" + ');">' + allLibraries[i].sDirectory + '</a><span style="display:none">' + allLibraries[i].sDirectory + '</span>';
 		tableRow("libraryTable", allLibraries[i].sVolumeName, c, b, "<input type='button' class='btn btn-danger' value='Delete' onclick='this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)'></input>");
 	}
 

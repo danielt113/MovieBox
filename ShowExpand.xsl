@@ -45,7 +45,7 @@
    <xsl:template match="Episode">
 			<li value="{EpisodeNum}"><div class="episodeButton {Quality}" onclick="playMov(this)" title="{Filepath}"><a class="{Quality}"></a><xsl:value-of select="Title"/></div><span style="display:none"><xsl:value-of select="Filepath"/></span></li>
 			
-			<xsl:if test="(position() mod 8) = 0">
+			<xsl:if test="(position() mod 7) = 0">
 				<xsl:text disable-output-escaping="yes">&lt;/ol&gt;&lt;ol&gt;</xsl:text>
 			</xsl:if>
    </xsl:template>
