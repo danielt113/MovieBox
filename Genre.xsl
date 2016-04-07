@@ -7,7 +7,7 @@
 
    <xsl:template match="/Movies">
 		<xsl:choose>
-			<xsl:when test="(count(Show/Episode) + count(Episode)) > 0">
+			<xsl:when test="(count(Show/Episode) + count(Movie)) > 0">
 				 <xsl:apply-templates select="Movie/Genre[generate-id() = generate-id(key('groups', .)[1])]">
 					 <xsl:sort select="." data-type="text" order="ascending"/>
 				</xsl:apply-templates>

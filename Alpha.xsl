@@ -9,7 +9,7 @@
 
    <xsl:template match="Movies">
 		<xsl:choose>
-			<xsl:when test="(count(Show/Episode) + count(Episode)) > 0">
+			<xsl:when test="(count(Show/Episode) + count(Movie)) > 0">
 				<xsl:apply-templates select="Movie/Title[generate-id() = generate-id(key('groups', substring(., 1 + 4*starts-with(., 'The '), 1))[1])] | Show/Title[generate-id() = generate-id(key('groups', substring(., 1 + 4*starts-with(., 'The '), 1))[1])]">
 					 <xsl:sort select="substring(., 1 + 4*starts-with(., 'The '), 1)" order="ascending"/>
 				</xsl:apply-templates>
