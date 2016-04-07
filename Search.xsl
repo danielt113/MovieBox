@@ -12,6 +12,8 @@
    
    <div style="float: left" class="textDiv">
 	<h1 style="margin-top:0;">Search: "<xsl:value-of select="Search/@Text"/>"</h1>
+	<xsl:choose>
+	<xsl:when test="Movie[contains(translate(Title, $smallcase, $uppercase),$searchString)] | Show[contains(translate(Title, $smallcase, $uppercase),$searchString)]">
          <xsl:for-each select="Movie[contains(translate(Title, $smallcase, $uppercase),$searchString)] | Show[contains(translate(Title, $smallcase, $uppercase),$searchString)]">
 		 
 			<xsl:sort select="string-length(substring-before(substring(translate(Title, $smallcase, $uppercase), 1 + 4*starts-with(translate(Title, $smallcase, $uppercase), 'THE ')), $searchString))" data-type="number" order="ascending"/>
@@ -52,6 +54,12 @@
 				</div>
 					
          </xsl:for-each>
+		 </xsl:when>
+		<xsl:otherwise>
+			<p>No results</p>
+			<input onclick="$('#searchBox').val('');filterMovies(document.getElementById('searchBox'))" type="button" value="Back" class="btn-secondary"/>
+		</xsl:otherwise>
+</xsl:choose>
 		 </div>
    </xsl:template>
 </xsl:stylesheet>

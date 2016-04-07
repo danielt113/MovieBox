@@ -527,7 +527,15 @@ label {
 	border-radius:4px;
 	border-style:outset;
 }
-
+.btn-secondary {
+	padding:0.7em;
+	font-size: 110%;
+    background-color:#eaebed;
+	color: #003300;
+    border-width:1px;
+	border-radius:4px;
+	border-style:outset;
+}
 .btn {
 	padding:0.5em;
 	color: #003300;
@@ -562,7 +570,7 @@ input[type='button'].btn-wide:hover {
     border-color:lightgrey;
 }
 
-input[type='button'].btn:hover {
+input[type='button'].btn:hover, input[type='button'].btn-secondary:hover {
 	cursor:pointer;
     background-color:lightgrey;
     border-color:lightgrey;

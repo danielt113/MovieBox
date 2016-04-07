@@ -318,8 +318,8 @@ function cleanFileName(orig) {
 	thisSeason = null; thisEpisode = null;
 	thisSeason =  newName.match(/S\d{1,2}E\d{1,2}/gi);
 	if (thisSeason !== null) { //If it is then extract the season/episode
-		thisShow = cleanWhitespace(newName.match(/.+?(?=s\d{1,2}e\d{1,2})/gi)[0]).replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-		
+		thisShow = cleanWhitespace(newName.match(/.+?(?=s\d{1,2}e\d{1,2})/gi)[0]).replace(/\w\S*/g, function(txt){return titleCase(txt)});
+		thisShow = thisShow.replace(/^\S/g, function(txt){return txt.toUpperCase()});
 		if (typeof knownShowAbbreviations[thisShow.toUpperCase()] !== "undefined")
 			thisShow = knownShowAbbreviations[thisShow.toUpperCase()];
 		
@@ -351,8 +351,19 @@ function cleanFileName(orig) {
 	if (sYearInfo.length > 4) sYearInfo = "";
 	
 //Capitalize properly
-	newName = newName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+	newName = newName.replace(/\w\S*/g, function(txt){return titleCase(txt)});
+	newName = newName.replace(/^\S/g, function(txt){return txt.toUpperCase()});
 	return newName;
+}
+function titleCase(txt){
+	var dontCapitalize = ["a", "an", "the", "at", "by", "for", "in", "of", "on", "to", "up", "and", "as", "but", "or", "nor"];
+	txt = txt.toLowerCase();
+	if (dontCapitalize.indexOf(txt) > -1) 
+		return txt;
+	var romanNumeralsReg = /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i;
+	if (romanNumeralsReg.test(txt))
+		return txt.toUpperCase();
+	return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 }
 function cleanWhitespace(aPhrase) {
 //Remove groups of spaces
