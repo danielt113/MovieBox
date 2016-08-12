@@ -6,16 +6,35 @@
 		<!-- Needed to make drop down menu work, from: http://stackoverflow.com/questions/13284083/ie10-renders-in-ie7-mode-how-to-force-standards-mode -->
 		<meta http-equiv="X-UA-Compatible" content="IE=10" />
 		
-		<!-- AJAX library -->
-		<script src="jquery.min.js"></script>
+		<!-- CSS -->
+		<link type="text/css" rel="stylesheet" href="resources/css/main.css"></link>
 		
-		<link type="text/css" rel="stylesheet" href="stylesheet.css"></link>
-		<script type="text/javascript" language="javascript" src="Main.js"></script>
-		<script type="text/javascript" language="javascript" src="Main2.js"></script>
-		<script type="text/javascript" language="javascript" src="Query.js"></script>
-		<script type="text/javascript" language="javascript" src="QueryShow.js"></script>
-		<script type="text/javascript" language="javascript" src="Xml.js"></script>
-		<script type="text/vbscript" language="vbscript" src="FolderPicker.vb"></script>
+		<!-- JQuery -->
+		<script type="text/javascript" language="javascript" src="resources/script/jquery.min.js"></script>
+		
+		<!-- Configuration and definitions -->
+		<script type="text/javascript" language="javascript" src="resources/script/Definitions.js"></script>
+		<script type="text/javascript" language="javascript" src="resources/script/Configuration.js"></script>
+		
+		<!-- HTML in-line functions -->
+		<script type="text/javascript" language="javascript" src="resources/script/Inline-functions.js"></script>
+		
+		<!-- tMDB querying code -->
+		<script type="text/javascript" language="javascript" src="resources/script/Query-movies.js"></script>
+		<script type="text/javascript" language="javascript" src="resources/script/Query-shows.js"></script>
+		
+		<!-- DB operations -->
+		<script type="text/javascript" language="javascript" src="resources/script/XML-database.js"></script>
+
+		<!-- VB code for a file browser -->
+		<script type="text/vbscript" language="vbscript" src="resources/script/Folder-picker.vb"></script>
+		
+		<!-- Movie finding -->
+		<script type="text/javascript" language="javascript" src="resources/script/Find-movies.js"></script>
+		
+		<!-- Starting function -->
+		<script type="text/javascript" language="javascript" src="resources/script/Init.js"></script>
+		
 	</head>
 
 	<body>
@@ -31,7 +50,7 @@
 			<li id="settings"><a href="#" onclick="openSettings()">Settings</a>
 			</li>
 
-			<li><a href="#" onclick="resetMovieData()" id="btnAbout">Reset</a></div>
+			<li><a href="#" onclick="location.reload()" id="btnAbout">Refresh</a></div>
 			</li>
 			<li id="search" disabled><label id="searchBoxLabel" class="not-allowed" for="searchBox">Search<input style="margin-left:1em;" disabled class="not-allowed" id="searchBox"  oninput="filterMovies(this);" type="text" name="textSearch" placeholder="start typing..."></label></li>
 		</ul>
@@ -39,60 +58,69 @@
 		<div id="loadingContainer">
 			<div id="loadingProgress"></div>
 		</div>
-		<div id = "aInitializeConsole">
-		
-			<h1><span id = "divDialogue"></span><small><small id="initSmall" class="muted" style=""></small></small></h1>
-			<p style="display:none;" id="summaryTableCaption">Summary</p>
-			<table style="display:none;" id="summaryTable" style="margin-top:0;">
+		<div id="debugTable" style="display:none;">
+		<h3 style="color:red">Debug</h3>
+		<table style="" id="summaryTable2">
 			  <tr>
-				<th>Files</th>
-				<td id = "divInitializeFiles">0</td>
-			  </tr>
-			  <tr>
-				<th>Folders</th>
-				<td id = "divInitializeFolders">0</td>
-			  </tr>
-			  <tr>
-				<th>Movies</th>
-				<td id = "divInitializeFound">0</td>
-			  </tr>
-			  <tr>
-				<th>Shows</th>
-				<td id = "divInitializeFoundShows">0</td>
-			  </tr>
-			  <tr>
-				<th>Episodes</th>
-				<td id = "divInitializeFoundEpisodes">0</td>
+				<th>Function</th>
+				<th>Status</th>
+				<th>P1</th>
+				<th>P2</th>
+				<th>P3</th>
 			  </tr>
 			</table>
+		</div>
+		<div id = "aInitializeConsole">
+			
+			<h1 id="h1content"><span id = "divDialogue"></span><small><small id="initSmall" class="muted" style=""></small></small></h1>
 			<div id="divOptions" style="display:none;">
-			<p>MovieBox searches folders for movies and shows. Tell it where to search.</p>
+			<p>MovieBox searches the folders in the table below for movies and shows. Add folders to search in.</p>
 			<h3>Folders</h3>
 			<table id="libraryTable" style="margin-top:0;">
 			  <tr>
 				<th>Name</th>
 				<th>Location</th>
-				<th>Enabled</th>
-				<th>Delete</th>
+				<th>Remove</th>
 			  </tr>
 			  </table>
-			  <label for="askEveryTime"><input id="askEveryTime" type="checkbox"></input> Don't ask on startup</label><br><br>
+			  <label for="askEveryTime"><input id="askEveryTime" type="checkbox"></input> Don't ask on startup</label><br>
+			 
+			 <p class="muted"><small class="link underline" onclick="($('#advancedSettings').is(':visible'))?$('#advancedSettings').hide():$('#advancedSettings').show()">Show advanced settings</small></p>
+				<div id="advancedSettings" class="ShowHide" style="display:none;">
+				<label for="debugModeCheck"><input id="debugModeCheck" type="checkbox"></input> Enable debug mode</label><br><br>
+				<input type="button" class="btn btn-danger" onclick="resetMovieData()" value="Reset all"></input>
+				<br><br>
+				</div>
+				
 			  <input type="button" value="Search for movies" onclick="searchForMovies(false)" class="btn-primary"></input>
+				
 			</div>
 		</div>
 		
 		
 		<div id="divProblems" style="display:none;">
-			<h2 style="margin-top:0;padding-top:0;"><span style="cursor:pointer;" onclick="document.getElementById('problemContainer').style.display=(document.getElementById('problemContainer').style.display=='block')?'none':'block';">Summary <div class="MenuArrow"></div></span></h2>
+			<p style="margin-top:0;padding-top:0;"><span style="cursor:pointer;" id="showRenameTable" class="link underline" onclick="document.getElementById('problemContainer').style.display=(document.getElementById('problemContainer').style.display=='block')?'none':'block';"><span id="problemCount"></span> files need to be renamed.</span></p>
 				<span id="problemContainer" style="display:none;">
-				<h3>Statistics</h3>
 				<span id="summaryTableDestination"></span>
-				<h3><span id="problemCount"></span> issues</h3>
-				<span id ="problemList">
+				<h3>Rename files</h3>
+				<p>Enter a movie title such as "Airplane<!-- 1980-->" and then identify it.<!-- For episodes of TV shows, use this format "Game of Thrones S01E02".--></p></p>
+				<span id ="renameSpan">
+					<table style="table-layout: fixed;width:100%;word-break: break-all;" id="renameTable">
+					  <tr>
+						<th width="30%">File</th>
+						<th width="40%">Movie Title <small class="muted">(from file name)</small></th>
+						<th width="30%">Title Identified</th>
+					  </tr>
+					 </table>
+					 <label for="useTitleIdentified"><input id="useTitleIdentified" checked type="checkbox"></input> Use the Title Identified</label><br><br>
+			  <input type="button" value="Rename files" onclick="renameFiles()" class="btn-primary"></input>
+			  <input type="button" value="Cancel" onclick="$(showRenameTable).click()" class="btn-secondary"></input>
+				</span>
+				<span id ="problemList" style="display:none;">
 					<table style="table-layout: fixed;width:100%;word-break: break-all;" id="problemTable">
 					  <tr>
 						<th width="30%">File</th>
-						<th width="20%">Title</th>
+						<th width="20%">Suggested Name</th>
 						<th width="30%">Request</th>
 						<th width="10%">Code</th>
 						<th width="10%">Origin</th>
@@ -102,21 +130,12 @@
 				</span>
 		</div>
 		
-		<div style="display:none;">
-		<h3 style="color:red">Debug</h3>
-		<table style="" id="summaryTable2">
-			  <tr>
-				<th>Status</th>
-				<th>Directory</th>
-			  </tr>
-			</table>
-		</div>
 		<div style="display:none;" id ="Boxart"></div>
 		
 		
 		</div>
-		<div id="tmdbAttribution" style="clear:left;padding-top:4em;margin-top:3em;padding-left:2em;width:100%;" >
-			<img style="display:inline-block" width="208px" height="60px"  src="https://assets.tmdb.org/images/logos/var_2_1_PoweredByTMDB_Blk_Logo_Bree.png"><p style="display:inline-block;" class="muted">This product uses the TMDb API but is not endorsed or certified by TMDb.</p>
+		<div id="tmdbAttribution" style="clear:left;padding-top:4em;margin-top:3em;padding-left:2em;width:100%;display:none;" >
+			<img style="display:inline-block" width="208px" height="60px"  src="https://assets.tmdb.org/images/logos/var_2_1_PoweredByTMDB_Blk_Logo_Bree.png"><p style="display:inline-block;" class="muted"><small>This product uses the TMDb API but is not endorsed or certified by TMDb.</small></p>
 		</div>
 	</body>
 
