@@ -1,0 +1,25 @@
+<h1 id="h1Content"><span id = "divDialogue">Settings</span> <small id="initSmall" class="muted" style=""></small></h1>
+
+<p>MovieBox searches the folders in the table below for movies and shows. Add folders to search in.</p>
+
+<h3>Folders</h3>
+
+<table id="libraryTable" style="margin-top:0;">
+  <tr>
+	<th>Name</th>
+	<th>Location</th>
+	<th>Remove</th>
+  </tr>
+</table>
+
+<label for="askEveryTime"><input id="askEveryTime" type="checkbox"></input> Don't ask on startup</label><br>
+ 
+<p class="muted"><small class="link underline" onclick="($('#advancedSettings').is(':visible'))?$('#advancedSettings').hide():$('#advancedSettings').show()">Show advanced settings</small></p>
+<div id="advancedSettings" class="ShowHide" style="display:none;">
+	<label for="debugModeCheck"><input id="debugModeCheck" type="checkbox"></input> Enable debug mode</label><br><br>
+	<input type="button" class="btn btn-danger" onclick="resetMovieData()" value="Reset all"></input>
+	<br><br>
+</div>
+	
+<input type="button" value="Search for movies" onclick="searchForMovies(false)" class="btn-primary"></input>
+<input type="button" value="Cancel" onclick='navigateTo(pages[document.getElementById("cmSort").parentNode.childNodes[0].innerHTML.toLowerCase()]);' class="btn-secondary"></input>

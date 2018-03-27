@@ -15,8 +15,8 @@
 				</div>
 			</xsl:when>
 				<xsl:otherwise>
-					<p>No movies or episodes found.</p>
-					<input onclick="openSettings()" type="button" value="Go to settings" class="btn-secondary"/>
+					<p>No movies or TV Shows found.</p>
+					<input onclick="pages.settings.navigateTo()" type="button" value="Go to settings" class="btn-secondary"/>
 				</xsl:otherwise>
 		</xsl:choose>
    </xsl:template>

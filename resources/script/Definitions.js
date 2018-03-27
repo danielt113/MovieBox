@@ -14,7 +14,7 @@ var concatFoundFiles = '', concatSavedFiles = '', concatFoundEpisodes = '';
 var concatSavedEpisodes = '', concatFoundShows = '', concatSavedShows = ''; 
 var savesExist, loaded=0;
 
-function Movie(sOriginal, sQuery, sFilePath, sDirectory, sTitle, sPoster, sYear, sRating, sVoteCount, sSynopsis, sRuntime, sRelease, sQuality, JSONGenreList, sBudget, sTrailer, sTagline){
+function Movie(sOriginal, sQuery, sFilePath, sDirectory, sTitle, sPoster, sYear, sRating, sVoteCount, sSynopsis, sRuntime, sRelease, sQuality, JSONGenreList, sBudget, sTrailer, sTagline, sSize){
 	this.sOriginal = sOriginal;
 	this.sQuery = sQuery;
 	this.sFilePath = sFilePath;
@@ -32,6 +32,7 @@ function Movie(sOriginal, sQuery, sFilePath, sDirectory, sTitle, sPoster, sYear,
 	this.sBudget = sBudget;
 	this.sTrailer = sTrailer;
 	this.sTagline = sTagline;
+	this.sSize = sSize;
 }
 function TVShow(sTitle, sSeasons, sPoster, sYear, sID, sEpisodes) {
 	this.sTitle = sTitle;
@@ -41,7 +42,7 @@ function TVShow(sTitle, sSeasons, sPoster, sYear, sID, sEpisodes) {
 	this.sID = sID;
 	this.sEpisodes = sEpisodes;
 }
-function Episode(sOriginal, sShow, sTitle, sSeason, sEpisode, sFilepath, sDirectory, sQuality, sOverview){
+function Episode(sOriginal, sShow, sTitle, sSeason, sEpisode, sFilepath, sDirectory, sQuality, sOverview, sRating, sVoteCount){
 	this.sOriginal = sOriginal;
 	this.sShow = sShow;
 	this.sTitle = sTitle;
@@ -51,6 +52,8 @@ function Episode(sOriginal, sShow, sTitle, sSeason, sEpisode, sFilepath, sDirect
 	this.sDirectory = sDirectory;
 	this.sQuality = sQuality;
 	this.sOverview = sOverview;
+	this.sRating = sRating;
+	this.sVoteCount = sVoteCount;
 }
 function Season(sNumber, sEpisodeCount, sEpisodes){
 	this.sNumber = sNumber;

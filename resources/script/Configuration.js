@@ -12,7 +12,7 @@ var knownRegistries = ["HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\Current
 var saveFile = "Movie-Data.xml";//objShell.SpecialFolders(knownSpecialFolders[1]) + '\\MovieBox\\Movie-Data.xml';
 
 //location of save file
-var saveFileFolder = objShell.SpecialFolders(knownSpecialFolders[1]) + '\\MovieBox';
+var saveFileFolder = objShell.SpecialFolders(knownSpecialFolders[1]) + '';
 
 var noMatchText = "No matches found";
 

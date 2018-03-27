@@ -28,6 +28,7 @@ function getQueryList() {
 			allShowQueries.push(jQuery.extend(true, {}, allShows[i]));
 			
 			if ((allShows[i].sID == null) || (allShows[i].sID.length == 0)) {
+				tableRow("summaryTable2", "show does not exist", allShows[i].sTitle);
 				//if no id, the show is completely new, so we add all it's episodes + 1 (for show id)
 				showQueryCount += allShows[i].sSeasons.length + 1;
 			}
@@ -115,10 +116,11 @@ function queryTMDb(index) {
 			return;
 	var b = ((allMovieQueries[thisIndex].hasOwnProperty("sYear")) && (allMovieQueries[thisIndex].sYear != "")) ? ("&year=" + allMovieQueries[thisIndex].sYear) : "";
 	$.support.cors = true;
+	//tableRow("summaryTable2", "https://api.themoviedb.org/3/search/movie?query=" + a + b + "&api_key=" + apikey);
 	setTimeout(function(){
 		$.ajax({
 			url: "https://api.themoviedb.org/3/search/movie?query=" + a + b + "&api_key=" + apikey,
-			success: parseNameMatchResults,
+			success: parseIDMatchResults/*parseNameMatchResults*/,
 			async: false,
 			type: 'GET',
 			//contentType: 'application/json',
@@ -163,10 +165,28 @@ function parseNameMatchResults(json) {
 	}
 }
 
-function parseIDMatchResults(json2) {
-	var tmpB = "null";
-	if (typeof json2.trailers.youtube[0] != "undefined")
-		tmpB = "https://www.youtube.com/watch?v=" + json2.trailers.youtube[0].source; //http://www.youtube.com/v/
+function parseIDMatchResults(json) {
+	var json2 = json;
+	var results1 = (json2 && json2.results && json2.results[0]);
+	
+	//tableRow("summaryTable2", "parseIDMatchResults", typeof results1);
+	
+	if (typeof results1 === "undefined") {
+		if (removeLastWords < 20) {
+			removeLastWords++; //Try removing another last word and query again
+			queryTMDb(thisIndex);
+		}
+		else {
+			errOrigin = "No results";
+			handleQueryError();
+		}
+		return;
+	}
+	
+	removeLastWords = 0;
+	
+	var tmpB = "https://www.youtube.com/watch?v=" + (json2 && json2.trailers && json2.trailers.youtube &&  json2.trailers.youtube[0] && json2.trailers.youtube[0].source)
+	
 	//if (thisIndex == allMovieQueries.length) objShell.run(tmpB);
 	try{allMovieQueries[thisIndex].sTitle = results1.title;}catch(e){}
 	allMovieQueries[thisIndex].sPoster = "http://image.tmdb.org/t/p/w185" + results1.poster_path;
@@ -183,11 +203,11 @@ function parseIDMatchResults(json2) {
 	allMovieQueries[thisIndex].sRating = Math.floor(Number(results1.vote_average) * 10);
 	allMovieQueries[thisIndex].sVoteCount = results1.vote_count;
 	allMovieQueries[thisIndex].sSynopsis = results1.overview;
-	allMovieQueries[thisIndex].sRuntime = json2.runtime;
+	allMovieQueries[thisIndex].sRuntime = json2.runtime || "";
 	allMovieQueries[thisIndex].sRelease = results1.release_date;
-	allMovieQueries[thisIndex].JSONGenreList = json2.genres;
-	allMovieQueries[thisIndex].sBudget = json2.budget;
-	allMovieQueries[thisIndex].sTagline = json2.tagline;
+	allMovieQueries[thisIndex].JSONGenreList = json2.genres || "";
+	allMovieQueries[thisIndex].sBudget = json2.budget || "";
+	allMovieQueries[thisIndex].sTagline = json2.tagline || "";
 	allMovieQueries[thisIndex].sTrailer = tmpB;
 	
 	//Set the trailer link
@@ -255,7 +275,7 @@ function identifyTitle(e) {
 }
 
 function handleQueryError(jqXHR, textStatus, errorThrown) {
-	/*if  (typeof textstatus === "undefined")	{*/
+	if  (textStatus !== "error")	{
 		removeLastWords = 0;
 		pCount++;
 		
@@ -267,9 +287,11 @@ function handleQueryError(jqXHR, textStatus, errorThrown) {
 		tmpZ + "</td><td>" +
 		((errOrigin.length)?errOrigin:"Unknown") + "</td></tr>";
 		
-		tableRow("renameTable", "<a class='link underline file-link' title='" + allMovieQueries[thisIndex].sFilePath + "'>" + allMovieQueries[thisIndex].sFilePath + "</a>", "<div class='wrap-none'><input onkeypress='handleKeyPress(this, event)' type='text' size='50' value='" + allMovieQueries[thisIndex].sOriginal + "'></input> <input type='button'   onclick='identifyTitle(this)' value='Identify' class='btn'></input> <input type='button' value='Whitelist' class='btn btn-danger'></input></div>", "<span class=''>" + noMatchText + "</span>");
+		tableRow("renameTable", "<a class='link underline file-link' title='" + allMovieQueries[thisIndex].sFilePath + "'>" + allMovieQueries[thisIndex].sFilePath + "</a>", "<div class='wrap-none'><input onkeypress='handleKeyPress(this, event)' type='text' size='50' value='" + allMovieQueries[thisIndex].sOriginal + "'></input> <input type='button'   onclick='identifyTitle(this)' value='Identify' class='btn'></input> <input type='button' value='blacklist' class='btn btn-danger'></input></div>", "<span class=''>" + noMatchText + "</span>");
 		
-		document.getElementById("problemCount").innerHTML = $("#renameTable tr").length - 1;
+		$("#problemCount").html($("#renameTable tr").length - 1);
+		if ($("#renameTable tr").length - 1)
+			$("#divProblems").show();
 		
 		removeTemporaryBoxart(allMovieQueries[thisIndex].sFilePath);
 		var divSelector = 'div[name="' + allMovieQueries[thisIndex].sQuery + '"]';
@@ -282,10 +304,17 @@ function handleQueryError(jqXHR, textStatus, errorThrown) {
 		
 		thisIndex++;
 		getMovieData();
-	/*}*/
-	/*else {
-		//if (textStatus !== "timeout") //could try 1 more time before going into offline mode
-		xmlDoc.save(saveFile);
-		document.getElementsByTagName("title")[0].innerHTML = "MovieBox (Offline)";
-	}*/
+	}
+	else {
+		tableRow("summaryTable2", "textStatus", textStatus, "error thrown",errorThrown );
+		if (errorThrown == "NetworkError") {
+			xmlDoc.save(saveFile);
+			document.getElementsByTagName("title")[0].innerHTML = "MovieBox (Offline)";
+			//$("#divDialogue").show();
+			$("#divDialogue").html("Offline mode");
+			$("#initSmall").html("No internet connection");
+			$("#h1Content").after('<input type="button" value="Refresh" onclick="location.reload()" class="btn-secondary"></input>')
+			
+		}
+	}
 }

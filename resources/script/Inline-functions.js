@@ -39,44 +39,72 @@ function UpdateDomLinks() {
 	});
 }
 
+function selectEpisode(t) {
+	var ESDiv = $(t).parent().parent();
+	var s = ESDiv.find("select[season-selector]")[0];
+	var season = s.options[s.selectedIndex].value;
+	var episode = t.options[t.selectedIndex].value;
+	var episodeTitle = $(t.options[t.selectedIndex]).data("title");
+	var filepath = $(t.options[t.selectedIndex]).data("filepath");
+	
+	var h4text;
+	if (episodeTitle)
+		h4text = "<small class=''>" + season + "." + episode + "</small> " + episodeTitle;
+	else
+		h4text = "Season " + season + " Episode " + episode;
+	
+	ESDiv.find("h4").html(h4text);
+	
+	//set all button data to this episode
+	ESDiv.find("input[type=button][data-filepath]").each(function(){
+		$(this).data("filepath", filepath)
+	});
+	ESDiv.find("input[type=button][title]").each(function(){
+		$(this).attr("title", filepath);
+	});
+}
+
+function selectSeason(t) {
+	var season = t.options[t.selectedIndex].value;
+	var ESDiv = $(t).parent().parent();
+	var episodeSelector = ESDiv.find("select[data-season=" + season + "]")[0];
+	ESDiv.find("select[data-season]").each(function(){
+		$(this).hide();
+	});
+	episodeSelector.style.display = "inline-block";
+	selectEpisode(episodeSelector);
+	
+}
+
 function selectSort(elem) {
-	$('#divOptions').hide();
-	$('#aInitializeConsole').hide();
-	$('#divProblems').show();
-	$('#divDialogue').html("");
-	$('#summaryTable').show();
-	$('#Boxart').show();
-	$("#settings a").removeClass("underline");
-	$("#sort > a").addClass("underline");
-	setTimeout(function() {reSortBy(elem.innerHTML);}, 1);
+	
+	//setTimeout(function() {reSortBy(elem.innerHTML);}, 1);
 	document.getElementById("cmSort").parentNode.removeChild(document.getElementById("cmSort"));
 	var cmSort = document.createElement("small");
 	cmSort.setAttribute("id","cmSort");
 	cmSort.innerHTML = "&nbsp;&#10003;"; //this is a checkmark
 	elem.parentNode.appendChild(cmSort);
 	
+	pages[elem.innerHTML.toLowerCase()].navigateTo();
 }
 
 function filterMovies(elem) {
 	if (elem.value.length > 0) {
-		$('#divOptions').hide();
-		$('#aInitializeConsole').hide();
-		$('#divProblems').show();
-		$('#divDialogue').html("");
-		$('#summaryTable').show();
-		$('#Boxart').show();
-		$("#menu li > a").removeClass("underline");
-		$("#search label").addClass("underline");
 		var ThisRow = xmlDoc.createElement("Search");
 		xmlDoc.documentElement.appendChild(ThisRow);
 		ThisRow.setAttribute("Text", elem.value);
-		reSortBy("Search");
+		
+		//avoid running the whole navigation script
+		if (pages.current.name == "Search")
+			reSortBy("Search");
+		else
+			pages.search.navigateTo();
+		
 		xmlDoc.documentElement.removeChild(ThisRow);
 	}
 	else {
-		$("#search label").removeClass("underline");
-		$("#sort > a").addClass("underline");
-		reSortBy(document.getElementById("cmSort").parentNode.childNodes[0].innerHTML);
+		pages[document.getElementById("cmSort").parentNode.childNodes[0].innerHTML.toLowerCase()].navigateTo();
+		//reSortBy();
 	}
 }
 
@@ -143,6 +171,214 @@ function getShowID(fpath) {
 	//return $(xmlDoc).find('Show Episode Filepath:textEquals("' + fpath.replace(/\\/gm,"\\") + '")').parent();
 }
 
+function joinPartyA(sPath, e) {
+	if(e.key !== 'Enter')
+        return
+	
+	var p = sPath.value;
+	pages.partyplayer.navigateTo();
+	$("#vid").get(0).src = htmlDecode($(sPath).data("filepath"));
+	$("#partyID").val(p);
+	joinParty();
+}
+
+function startParty(sPath) {
+	pages.partyplayer.navigateTo();
+	$("#vid").get(0).src = htmlDecode($(sPath).data("filepath"));
+	
+	var xhttp = new XMLHttpRequest();
+	
+	$("#vid").get(0).pause();
+	
+	$("#partyID").val("Party starting...");
+	
+	xhttp.onreadystatechange = function() {
+
+		if (this.readyState == 4 && this.status == 200) {
+
+		var j = JSON.parse(xhttp.responseText);
+		
+		if (j.queryStatus == "error") {
+			$("#statusBox").val("Something went wrong");
+			return;
+		}
+		
+		//success, use xhttp.responseText
+		$("#partyID").val(j.party);
+		//$("#partyID").val(xhttp.responseText);
+		joinParty();
+
+		}
+
+		if (this.readyState == 4 && this.status !== 200) {
+
+		$("#partyID").val("Oops, please try again");
+
+		}
+	}
+	
+	xhttp.open("POST", "http://movieboxparty.herokuapp.com/start?movie-name=the%20wolf%20of%20wall%20street&timestamp="+$("#vid").get(0).currentTime, true);
+
+	xhttp.send();
+}
+
+function joinParty() {
+	if (isNaN($("#partyID").val()))
+		return;
+		
+	var xhttp = new XMLHttpRequest();
+	
+	$("#statusBox").val("Joining party...");
+	
+	xhttp.onreadystatechange = function() {
+
+		if (this.readyState == 4 && this.status == 200) {
+		
+		var j = JSON.parse(xhttp.responseText);
+		
+		if (j.queryStatus == "error") {
+			//$("#statusBox").val("That party is finished");
+			return;
+		}
+		
+		//success, use xhttp.responseText
+		$("#statusBox").val(j.status + " at " + j.timeStamp);
+		
+		setMoviePartyEvents();
+		interval = setInterval(pollParty, 3000);
+
+		}
+
+		if (this.readyState == 4 && this.status !== 200) {
+
+			$("#statusBox").val("Something went wrong");
+
+		}
+	}
+
+	xhttp.open("GET", "http://movieboxparty.herokuapp.com/watch?party=" + $("#partyID").val() + "&controllerTime=" + new Date().getTime(), true);
+
+	xhttp.send();
+}
+function setMoviePartyEvents() {
+	var v = $("#vid");
+	
+	v.on("pause", function(){
+		sendPartyController("&status=pause");
+		$("#statusBox").val("Paused");
+	})
+	
+	v.on("play", function(){
+		sendPartyController("&status=play");
+		$("#statusBox").val("play");
+	})
+	
+	//these use too many server calls
+	/*v.on("seeking", function(){
+		sendPartyController("&status=pause");
+		$("#statusBox").val("seeking");
+	})
+	
+	v.on("seeked", function(){
+		sendPartyController("&status=play");
+		$("#statusBox").val("seeked");
+	})*/
+	
+}
+
+function sendPartyController(status){
+	var xhttp = new XMLHttpRequest();
+	
+	xhttp.onreadystatechange = function() {
+
+		if (this.readyState == 4 && this.status == 200) {
+
+			var j = JSON.parse(xhttp.responseText);
+			
+			if (j.queryStatus == "error")
+				$("#statusBox").val("Something went wrong");
+				
+		//$("#statusBox").val(j.queryStatus);
+
+		}
+
+		if (this.readyState == 4 && this.status !== 200) {
+
+		$("#statusBox").val("Couldn't send " + status);
+
+		}
+	}
+	
+	xhttp.open("POST", "http://movieboxparty.herokuapp.com/controller?party=" + $("#partyID").val() + "&timestamp=" + $("#vid").get(0).currentTime + status + "&controllerTime=" + new Date().getTime(), true);
+
+	xhttp.send();
+}
+function pollParty() {
+	
+	if (isNaN($("#partyID").val()))
+		return;
+		
+	var v = $("#vid").get(0);
+		
+	var xhttp = new XMLHttpRequest();
+	
+	xhttp.onreadystatechange = function() {
+
+		if (this.readyState == 4 && this.status == 200) {
+		
+			var j = JSON.parse(xhttp.responseText);
+			
+			if (j.queryStatus == "error") {
+				$("#statusBox").val("The party is over");
+				clearInterval(interval);
+				return;
+			}
+			
+			//success, use xhttp.responseText
+			
+			var deltaTimeSeconds = (new Date().getTime() - parseFloat(j.controllerTime)) / 1000;
+			
+			$("#statusBox").val(j.status + " at " + (parseFloat(j.timeStamp) + deltaTimeSeconds));
+			
+			//$("#partyID").val(xhttp.responseText);
+						
+			
+			
+			switch (j.status) {
+				case "play":
+			
+					if (v.currentTime < parseFloat(j.timeStamp) + deltaTimeSeconds - 1 || v.currentTime > parseFloat(j.timeStamp) + deltaTimeSeconds + 1 )
+						v.currentTime = parseFloat(j.timeStamp) + deltaTimeSeconds;
+					
+					//$("#statusBox").val(parseFloat(j.timeStamp) + deltaTimeSeconds);
+					
+					if (v.currentTime == 0 || v.paused == true) {
+						if (v.ended == false)
+							v.play();
+					}
+				break;
+				
+				case "pause":
+					$("#statusBox").val(j.status + " at " + parseFloat(j.timeStamp));
+					v.currentTime = parseFloat(j.timeStamp);
+					v.pause();
+				break;
+			}
+		}
+
+		if (this.readyState == 4 && this.status !== 200) {
+
+			$("#statusBox").val("Something went wrong");
+			clearInterval(interval);
+
+		}
+	}
+
+	xhttp.open("GET", "http://movieboxparty.herokuapp.com/watch?party=" + $("#partyID").val() + "&controllerTime=" + new Date().getTime(), true);
+
+	xhttp.send();
+
+}
 
 //"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe" double back slashes and must be in it's own quotes!
 function playMov(sPath) {
@@ -252,11 +488,14 @@ function expandDetails(elem) {
 		//$(xmlDoc.transformNode(objXSL)).insertAfter(elem.parentNode.parentNode.parentNode);
 		$(a).append(xmlDoc.transformNode(objXSL));
 		xmlDoc.documentElement.removeChild(ThisRow);
+		
+		if (xslExpandName == "ShowExpand")
+			selectSeason($(a).find("select[season-selector]")[0]);
 	}
 }
 
 function resetMovieData() {
-	if (confirm("This will clear your saved data. Are you sure you wish to continue?")) {
+	if (confirm("This will clear settings and movie information. Are you sure you wish to continue?")) {
 		objFSO.DeleteFile(saveFile);
 		location.reload();
 	}
@@ -344,32 +583,6 @@ function clearTable(id) {
 }
 
 function searchForMovies(skipSaving) {
-	$('#divOptions').hide();
-	$("#tmdbAttribution").hide();
-	$('#searchBoxLabel').removeClass('not-allowed');
-	$('#searchBox').removeClass('not-allowed');
-	$('#searchBox').prop('disabled', false);
-	$('#divDialogue').html('Searching...');
-	$('#Boxart').html("");
-	$('#Boxart').show();
-	
-	clearTable("renameTable");
-	
-	
-	$('ul#menu li:first-child').prop('disabled', false);
-	$('ul#menu li:first-child a').removeClass('not-allowed');
-	$('ul#menu li:first-child div').removeClass('not-allowed');
-	$('ul#menu #search').prop('disabled', false);
-	
-	$("#settings a").removeClass("underline");
-	$("#sort > a").addClass("underline");
-	
-	$('#summaryTable').show();
-	
-	if ($("#debugModeCheck").prop("checked"))
-		$("#debugTable").show();
-	else 
-		$("#debugTable").hide();
 
 	if (!skipSaving) {
 		deleteSavedFolders();
@@ -392,67 +605,9 @@ function searchForMovies(skipSaving) {
 		xmlDoc.save(saveFile);
 	}
 	
-	window.scrollTo(0, 0);
+	pages.searching.navigateTo();
 	
 	nextLibrary();
-}
-
-function openSettings() {
-	checkedDirs = new Array();
-	showCount = 0;
-	sYearInfo = "";
-	theQual = "";
-	thisSeason = ""; 
-	thisEpisode = ""; 
-	thisShow = "";
-	k = 0;
-	doneCount = 1;
-	remainCount = 1;
-	startDir = "";
-	disabledLibraries = 0;
-	doneLibraries = 0;
-	libraryDepth = 0;
-	folderList = new Array();
-	iFolder = 0;
-	iLibrary = 0;
-	maxDepth = 2;
-	barWidth = 0;
-	allMovies = [];
-	allMovieQueries = [];
-	allEpisodes = [];
-	allShows = [];
-	
-	loadXMLDoc();
-	
-	savesExist = retrieveSavedFolders();
-	
-	retrieveSavedFilePaths();
-
-	getLibraries();
-		
-	$("#divOptions").show();
-	document.getElementById("divDialogue").innerHTML = "Settings";
-	$("#settings a").addClass("underline");
-	
-	//$("#summaryTable2").hide();
-	$("#loadingProgress").removeClass("invisible");
-
-	document.getElementById("aInitializeConsole").style.display = "block";
-	document.getElementById("divProblems").style.display="none";
-
-	$("#settings a").addClass("underline");
-	$("#sort > a").removeClass("underline");
-	
-	$('#divOptions').show();
-	$('#Boxart').hide();
-	$('#tmdbAttribution').hide();
-	
-	$('#summaryTable').hide();
-	//$('#loadingProgress').hide();
-	
-	UpdateDomLinks();
-	
-	window.scrollTo(0, 0);
 }
 
 function htmlDecode(input){

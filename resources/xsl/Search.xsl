@@ -8,8 +8,7 @@
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
 	<xsl:variable name="searchString" select="translate(Search/@Text, $smallcase, $uppercase)"/>
    
-   <div style="float: left" class="textDiv">
-	<h1 style="margin-top:0;">Search: "<xsl:value-of select="Search/@Text"/>"</h1>
+	<h1>Search: "<xsl:value-of select="Search/@Text"/>"</h1>
 	<xsl:choose>
 	<xsl:when test="Movie[contains(translate(Title, $smallcase, $uppercase),$searchString)] | Show[contains(translate(Title, $smallcase, $uppercase),$searchString)]">
          <xsl:for-each select="Movie[contains(translate(Title, $smallcase, $uppercase),$searchString)] | Show[contains(translate(Title, $smallcase, $uppercase),$searchString)]">
@@ -51,9 +50,12 @@
 		 </xsl:when>
 		<xsl:otherwise>
 			<p>There are no results.</p>
-			<input onclick="$('#searchBox').val('');filterMovies(document.getElementById('searchBox'))" type="button" value="Go back" class="btn-secondary"/>
+			
 		</xsl:otherwise>
 </xsl:choose>
-		 </div>
+<div  style="clear:both;">
+<br/>
+<input onclick="$('#Search').val('');filterMovies(document.getElementById('Search'))" type="button" value="Back" class="btn-secondary"/>
+</div>
    </xsl:template>
 </xsl:stylesheet>

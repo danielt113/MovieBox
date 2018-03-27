@@ -63,7 +63,7 @@ function listFolders(dir) {
 			setTimeout(function() {
 				asynchronize();
 			}
-			,1);
+			,20);
 		}
 		else {
 			if ((subFolderDepth) > maxDepth) {
@@ -74,12 +74,15 @@ function listFolders(dir) {
 			iFolder++;
 			if (typeof folderList[iFolder] !== "undefined") {
 				//tableRow("summaryTable2", "listFolders", "Do: " + folderList[iFolder]) 
-				document.getElementById("initSmall").innerHTML = folderList[iFolder];
+				//document.getElementById("initSmall").innerHTML = folderList[iFolder];
+				//$("#divDialogue").text(folderList[iFolder]);
+				$(pages.current.content).find("#initSmall").text(folderList[iFolder]);
 				listFolders(folderList[iFolder]);
 			}
 			else  {
-				tableRow("summaryTable2", "listFolders", "done", allLibraries[iLibrary].sDirectory, iFolder);
+				//tableRow("summaryTable2", "listFolders", "done", allLibraries[iLibrary].sDirectory, iFolder);
 				iLibrary++;
+				$(pages.current.content).find("#initSmall").text(folderList[iFolder]);
 				if (iLibrary < allLibraries.length) {
 					doneLibraries++;
 					//setLoadingProgress(50);
@@ -158,7 +161,8 @@ function listFiles(dir) {
 		//Movies
 			if (thisSeason === null) {
 				//document.getElementById("divInitializeFound").innerHTML = Number(document.getElementById("divInitializeFound").innerHTML) + 1;
-				allMovies.push(new Movie(orig, name, s, dir, name, "", sYearInfo, "", "", "", "", "", theQual, "", "", ""));
+				allMovies.push(new Movie(orig, name, s, dir, name, "", sYearInfo, "", "", "", "", "", theQual, "", "", "", "", s.size));
+				
 			//Create temp movie to show without boxart
 				
 				if ((typeof concatSavedFiles === "undefined") || (concatSavedFiles.indexOf(s) < 0)) {
@@ -211,7 +215,7 @@ function getLibraries() {
 		if ((d.DriveType == 1) && (d.IsReady)) {
 			if ((d.VolumeName != "") && (d.VolumeName != "System Reserved")) {
 				if (savesExist == 0) {
-					allLibraries.push(new Library(d.DriveLetter + ":\\", 1, "", "",d.VolumeName, "removable", true));
+					//allLibraries.push(new Library(d.DriveLetter + ":\\", 1, "", "",d.VolumeName, "removable", true));
 					//saveFolder(allLibraries[allLibraries.length - 1]);
 				}
 				else {
@@ -219,13 +223,13 @@ function getLibraries() {
 					var bFound = false;
 					for (var i=0; i<allLibraries.length; i++) {
 						if (allLibraries[i].sVolumeName == d.VolumeName) {
-							allLibraries[i].sDirectory = d.DriveLetter + ":\\";
+							//allLibraries[i].sDirectory = d.DriveLetter + ":\\";
 							bFound = true;
 						}
 					}
 					//if saves do exist but this removable drive hasn't been found before
 					if (!bFound) {
-						allLibraries.push(new Library(d.DriveLetter + ":\\", 1, "", "",d.VolumeName, "removable", true));
+						//allLibraries.push(new Library(d.DriveLetter + ":\\", 1, "", "",d.VolumeName, "removable", true));
 						//saveFolder(allLibraries[allLibraries.length - 1]);
 					}
 				}

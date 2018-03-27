@@ -39,16 +39,26 @@
 					  <xsl:with-param name="count" select="5 - round(Rating div 20)"/>
 					</xsl:call-template>
 				</div>
-				<div style="display:inline-block;padding:0.3em;">
+				<div style="display:inline-block;padding:0.3em;border-right:1px solid black;">
 					<xsl:value-of select="Runtime"/> min.
-				</div><br/>
+				</div>
 			</xsl:if>
+			<div style="display:inline-block;padding:0.3em;">
+					<xsl:value-of select="round(10 * Size div (1024 * 1024 * 1024)) div 10"/> GB
+				</div><br/>
 			
 			<input type="button" class="btn btn-play" onclick="playMov(this)" data-filepath="{Filepath}" value="Play"></input> 
+			<input type="button" class="btn" onclick="startParty(this)" title="Get a party code to watch this movie with your friends" data-filepath="{Filepath}" value="Start party"></input>
+			<input data-filepath="{Filepath}"  onkeyup="joinPartyA(this, event)"  style='font-size: 18px;color:grey' placeholder="Join party" size="8" id="partyID" type="text" value="" class="btn-secondary" ></input>
+			
+			<br/>
+			<br/>
+			<br/>
 			<xsl:if test="Trailer != ''"><input type="button" class="btn LinkButton" onclick="playTrailer(this)" title="{Trailer}" value="Trailer"></input></xsl:if>
 			<input type="button" class="btn" onclick="exploreMov(this)" title="{Filepath}" data-filepath="{Filepath}" value="Browse to"></input>
 			<input type="button" class="btn btn-danger" onclick="deleteMov(this)" title="{Filepath}" value="Delete"></input>
 			<br/>
+			
 						
 			<!--<p><strong>Budget:</strong> $<xsl:value-of select="format-number(Budget,'#,###')"/></p>-->
 			<p title="{Synopsis}"><small><xsl:value-of select="Tagline"/></small></p>

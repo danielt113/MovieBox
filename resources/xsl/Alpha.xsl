@@ -10,15 +10,15 @@
    <xsl:template match="Movies">
 		<xsl:choose>
 			<xsl:when test="(count(Show/Episode) + count(Movie)) &gt; 0">
-				<div style="clear: both;">	
+				<div style="clear: both;margin:0;padding:0;">	
 					<xsl:apply-templates select="Movie/Title[generate-id() = generate-id(key('groups', substring(., 1 + 4*starts-with(., 'The '), 1))[1])] | Show/Title[generate-id() = generate-id(key('groups', substring(., 1 + 4*starts-with(., 'The '), 1))[1])]">
 						 <xsl:sort select="substring(., 1 + 4*starts-with(., 'The '), 1)" order="ascending"/>
 					</xsl:apply-templates>
 				</div>
 			</xsl:when>
 				<xsl:otherwise>
-					<p>No movies or episodes found.</p>
-					<input onclick="openSettings()" type="button" value="Go to settings" class="btn-secondary"/>
+					<p>No movies or TV Shows found.</p>
+					<input onclick="pages.settings.navigateTo()" type="button" value="Go to settings" class="btn-secondary"/>
 				</xsl:otherwise>
 		</xsl:choose>
    </xsl:template>

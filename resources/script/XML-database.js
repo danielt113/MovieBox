@@ -55,6 +55,8 @@ function saveShow(objShow, isPlaceholder) {
 			var x = xmlDoc.createElement("Filepath");var y = xmlDoc.createTextNode(objShow.sEpisodes[i].sFilepath);x.appendChild(y);ThisEpisode.appendChild(x);
 			var x = xmlDoc.createElement("Directory");var y = xmlDoc.createTextNode(objShow.sEpisodes[i].sDirectory);x.appendChild(y);ThisEpisode.appendChild(x);
 			var x = xmlDoc.createElement("Quality");var y = xmlDoc.createTextNode(objShow.sEpisodes[i].sQuality);x.appendChild(y);ThisEpisode.appendChild(x);
+			var x = xmlDoc.createElement("Rating");var y = xmlDoc.createTextNode(objShow.sEpisodes[i].sRating);x.appendChild(y);ThisEpisode.appendChild(x);
+			var x = xmlDoc.createElement("VoteCount");var y = xmlDoc.createTextNode(objShow.sEpisodes[i].sVoteCount);x.appendChild(y);ThisEpisode.appendChild(x);
 		}
 	}
 }
@@ -222,6 +224,7 @@ function SaveMovie(objMovie, isPlaceholder) {
 	var x = xmlDoc.createElement("Budget");var y = xmlDoc.createTextNode(objMovie.sBudget);x.appendChild(y);ThisRow.appendChild(x);
 	var x = xmlDoc.createElement("Trailer");var y = xmlDoc.createTextNode(objMovie.sTrailer);x.appendChild(y);ThisRow.appendChild(x);
 	var x = xmlDoc.createElement("Tagline");var y = xmlDoc.createTextNode(objMovie.sTagline);x.appendChild(y);ThisRow.appendChild(x);
+	var x = xmlDoc.createElement("Size");var y = xmlDoc.createTextNode(objMovie.sSize);x.appendChild(y);ThisRow.appendChild(x);
     //JSON Genre List (just an array)
     for (i = 0; i < objMovie.JSONGenreList.length; i++) {
         var x = xmlDoc.createElement("Genre");

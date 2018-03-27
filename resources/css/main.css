@@ -33,10 +33,13 @@ body {
 	border-bottom: 0.30em solid transparent; 
 	border-right: 0.30em solid #003300; 
 }
-#searchBox {
+#searchli {
+	/*border: 1px solid red;
+	padding-bottom:1em;*/
+}
+#Search {
 	border-radius:4px;
 	margin-top:0;
-	margin-bottom:0.3em;
 	margin-bottom:0.3em;
 	margin-left:0.3em;
 	margin-right:0.3em;
@@ -181,13 +184,15 @@ div.episodeSeasonDiv {
 	padding-right:15px;
 	
 	padding: 10px;
-	min-width: 195px;
+	/*min-width: 195px;*/
+	width: 340px;
 }
 div.Movie div.episodeSeasonDiv {
 	font-size: 80%;
-	max-width: 320px;
+	/*max-width: 320px;*/
 	max-height: 195px;
 	padding:.5em;
+	width: 340px;
 }
 .lastWatchedEpisode a {
 	/*text-decoration: underline;*/
@@ -368,7 +373,7 @@ img.noBoxart + big.bigAlt {
 
 /* Table stuff */
 table {
-	margin-left:1em;	
+	/*margin-left:1em;	*/
 	margin-top:2em;
 	margin-bottom:2.5em;
 	background-color: #ffffcc ;
@@ -476,27 +481,30 @@ label {
 	font-size: 110%;
     background-color:#006600;
 	color: #ffffe4;
-    border-width:1px;
+    /*border-width:1px;
 	border-radius:4px;
-	border-style:outset;
+	border-style:outset;*/
+	border-style:none;
 }
 .btn-secondary {
 	padding:0.7em;
 	font-size: 110%;
     background-color:#eaebed;
 	color: #003300;
-    border-width:1px;
+    /*border-width:1px;
 	border-radius:4px;
-	border-style:outset;
+	border-style:outset;*/
+	border-style:none;
 }
 .btn {
 	padding:0.5em;
 	margin:0.25em;
 	color: #003300;
 	background-color: #eaebed;
-	border-width:1px;
+	/*border-width:1px;
 	border-radius:4px;
-	border-style:outset;
+	border-style:outset;*/
+	border-style:none;
 }
 
 .btn-wide {
@@ -508,9 +516,10 @@ label {
     //border:1px solid #003300;
 	background-color: #eaebed;
 	//border:0;
-	border-width:1px;
+	/*border-width:1px;
 	border-radius:4px;
-	border-style:outset;
+	border-style:outset;*/
+	border-style:none;
 }
 
 input[type='button'].btn-primary:hover {
@@ -566,7 +575,7 @@ input:focus {
     box-shadow: 0 0 2pt 1pt lightblue;
 	outline: 0;
 }
-input#searchBox:focus {
+input#Search:focus {
     //background-color:#ffffe0;
 	//color:#003300;
 }
@@ -591,4 +600,17 @@ outline:0;
 .ContinueWatching .ForContinueWatching {
 	display: inline-block;
 	visibility: visible;
+}
+
+.select-style {
+    padding: 0.2em;
+    border: 1px solid #003300;
+    width: 160px;
+    border-radius: 4px;
+    background-color: #ffffcc;
+	color: #003300;
+	cursor: pointer;
+}
+div.episodeSeasonDiv .select-style:nth-child(1) {
+	margin-right: 10px;
 }

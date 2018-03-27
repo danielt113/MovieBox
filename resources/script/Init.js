@@ -19,6 +19,9 @@ https://github.com/danielt113/MovieBox/blob/master/LICENSE
 ----------
 To do list
 
+Remember last episode
+For all inputs, when enter clicked, select the checkbox or trigger onclick
+Rename dialog use full file name processing
 MovieQuery only gets first match, second match when opening movie
 	movie expand play loading gif then query tmdb id match
 
@@ -57,32 +60,27 @@ window.onload = function() {
 	if (debugMode == 1)
 		$("#debugTable").show();
 	
-	for (var i=0; i<allLibraries.length; i++) {
-		//var b = "<label class='muted' for='chk" + i + "'><input id='chk" + i + "' type='checkbox' " + ((allLibraries[i].sEnabled==1)?"checked":"") + " onchange='chkChange(this)'></input><small> (" + ((allLibraries[i].sEnabled)?"Yes":"No") + ")</small></label>"
-		var c = '<a class="link underline folder-link" id="chk' + i + '" style="cursor:pointer;" title="' + allLibraries[i].sDirectory + '">' + allLibraries[i].sDirectory + '</a><span style="display:none">' + allLibraries[i].sDirectory + '</span>';
-		tableRow("libraryTable", allLibraries[i].sVolumeName, c, "<input type='button' class='btn btn-danger' value='Remove' onclick='this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)'></input>");
-	}
-
-	$("#libraryTable").append("<tr id='addLibRow'><td colspan='4'><input type='button' value='Add a folder' onclick='addLibrary(PickFolder())' class='btn-wide'></input></td></tr>");
-	
 	if ($(".CoverArt").length)
 		$("#tmdbAttribution").show();
 	else
 		$("#tmdbAttribution").hide();
 	
+	//check if there is a cookie to skip settings
 	if (skipSettings) {
+		pages.settings.onNavigate();
 		searchForMovies(skipSettings);
 	}
 	else {
-		openSettings();
+		pages.settings.navigateTo();
+		UpdateDomLinks();
 	}
 }
 
 function init2() {
-	//return;
-	//$("#summaryTable2").hide();
+
 	setTimeout(function () {$("#loadingProgress").addClass("invisible");}, 1000);
 	setTimeout(function () {setLoadingProgress(0);}, 1000);
+	
 	//Add temporary boxart for shows since we have all the episodes for them
 	for (var i = 0; i < allShows.length; i++) {
 		if ((typeof concatSavedShows === "undefined") || (concatSavedShows.indexOf("&" + allShows[i].sTitle.toUpperCase() + "&") < 0)) {
@@ -92,11 +90,10 @@ function init2() {
 	
 	//Build a concatenated string of all the movie filepaths saved in the xmlDoc (to see if movies we found already exist)
 	removeUnfoundMovies();
-
+	
 	//Transform and display all the movies that weren't removed from the xmldoc
-	document.getElementById("initSmall").innerHTML = "";
-	document.getElementById("divDialogue").innerHTML = "Getting box art";
-	reSortBy(document.getElementById("cmSort").parentNode.childNodes[0].innerHTML);
+	$("divDialog").text("Getting box art");
+	pages[document.getElementById("cmSort").parentNode.childNodes[0].innerHTML.toLowerCase()].navigateTo();
 
 	//Start querying
 	getQueryList();
@@ -112,11 +109,10 @@ function continueMe() {
 	
 	UpdateDomLinks();
 	
-	document.getElementById("aInitializeConsole").style.display = "none";
 	if ($("#problemTable tr").length > 1)
-		document.getElementById("divProblems").style.display="block";
+		$("#problemTable").show();
 	else
-		document.getElementById("divProblems").style.display="none";
+		$("#problemTable").hide();
 	
 	xmlDoc.save(saveFile);
 	

@@ -1,6 +1,13 @@
 <!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
+		<HTA:APPLICATION 
+			icon="app.ico" 
+			maximizeButton="yes" 
+			minimizeButton="yes" 
+			navigable="yes"
+			CONTEXTMENU="yes"
+			/> 
 		<title>MovieBox</title>
 		
 		<!-- Needed to make drop down menu work, from: http://stackoverflow.com/questions/13284083/ie10-renders-in-ie7-mode-how-to-force-standards-mode -->
@@ -18,6 +25,10 @@
 		
 		<!-- HTML in-line functions -->
 		<script type="text/javascript" language="javascript" src="resources/script/Inline-functions.js"></script>
+		
+		<!-- Page navigation -->
+		<script type="text/javascript" language="javascript" src="resources/script/Navigation.js"></script>
+		<script type="text/javascript" language="javascript" src="resources/script/Navigation-configuration.js"></script>
 		
 		<!-- tMDB querying code -->
 		<script type="text/javascript" language="javascript" src="resources/script/Query-movies.js"></script>
@@ -47,12 +58,14 @@
 					<!-- <li><a onclick="selectSort(this)" href="#">Recent</a></li> -->
 				</ul>
 			</li>
-			<li id="settings"><a href="#" onclick="openSettings()">Settings</a>
+			<li id="settings"><a href="#" onclick="pages.settings.navigateTo()">Settings</a>
 			</li>
 
 			<li><a href="#" onclick="location.reload()" id="btnAbout">Refresh</a></div>
 			</li>
-			<li id="search" disabled><label id="searchBoxLabel" class="not-allowed" for="searchBox">Search<input style="margin-left:1em;" disabled class="not-allowed" id="searchBox"  oninput="filterMovies(this);" type="text" name="textSearch" placeholder="start typing..."></label></li>
+			<li><a href="#" onclick="resetMovieData();location.reload()" id="btnAbout">Reset</a></div>
+			</li>
+			<li id="searchli" disabled><label id="searchBoxLabel" class="not-allowed" for="Search">Search<input style="margin-left:1em;" disabled class="not-allowed" id="Search"  oninput="filterMovies(this);" type="text" name="textSearch" placeholder="start typing..."></label></li>
 		</ul>
 <div id="upperContainer">
 		<div id="loadingContainer">
@@ -70,73 +83,9 @@
 			  </tr>
 			</table>
 		</div>
-		<div id = "aInitializeConsole">
-			
-			<h1 id="h1content"><span id = "divDialogue"></span><small><small id="initSmall" class="muted" style=""></small></small></h1>
-			<div id="divOptions" style="display:none;">
-			<p>MovieBox searches the folders in the table below for movies and shows. Add folders to search in.</p>
-			<h3>Folders</h3>
-			<table id="libraryTable" style="margin-top:0;">
-			  <tr>
-				<th>Name</th>
-				<th>Location</th>
-				<th>Remove</th>
-			  </tr>
-			  </table>
-			  <label for="askEveryTime"><input id="askEveryTime" type="checkbox"></input> Don't ask on startup</label><br>
-			 
-			 <p class="muted"><small class="link underline" onclick="($('#advancedSettings').is(':visible'))?$('#advancedSettings').hide():$('#advancedSettings').show()">Show advanced settings</small></p>
-				<div id="advancedSettings" class="ShowHide" style="display:none;">
-				<label for="debugModeCheck"><input id="debugModeCheck" type="checkbox"></input> Enable debug mode</label><br><br>
-				<input type="button" class="btn btn-danger" onclick="resetMovieData()" value="Reset all"></input>
-				<br><br>
-				</div>
-				
-			  <input type="button" value="Search for movies" onclick="searchForMovies(false)" class="btn-primary"></input>
-				
-			</div>
-		</div>
 		
+		<div style="margin:0;padding:0;" id="pageContainer"></div>
 		
-		<div id="divProblems" style="display:none;">
-			<p style="margin-top:0;padding-top:0;"><span style="cursor:pointer;" id="showRenameTable" class="link underline" onclick="document.getElementById('problemContainer').style.display=(document.getElementById('problemContainer').style.display=='block')?'none':'block';"><span id="problemCount"></span> files need to be renamed.</span></p>
-				<span id="problemContainer" style="display:none;">
-				<span id="summaryTableDestination"></span>
-				<h3>Rename files</h3>
-				<p>Enter a movie title such as "Airplane<!-- 1980-->" and then identify it.<!-- For episodes of TV shows, use this format "Game of Thrones S01E02".--></p></p>
-				<span id ="renameSpan">
-					<table style="table-layout: fixed;width:100%;word-break: break-all;" id="renameTable">
-					  <tr>
-						<th width="30%">File</th>
-						<th width="40%">Movie Title <small class="muted">(from file name)</small></th>
-						<th width="30%">Title Identified</th>
-					  </tr>
-					 </table>
-					 <label for="useTitleIdentified"><input id="useTitleIdentified" checked type="checkbox"></input> Use the Title Identified</label><br><br>
-			  <input type="button" value="Rename files" onclick="renameFiles()" class="btn-primary"></input>
-			  <input type="button" value="Cancel" onclick="$(showRenameTable).click()" class="btn-secondary"></input>
-				</span>
-				<span id ="problemList" style="display:none;">
-					<table style="table-layout: fixed;width:100%;word-break: break-all;" id="problemTable">
-					  <tr>
-						<th width="30%">File</th>
-						<th width="20%">Suggested Name</th>
-						<th width="30%">Request</th>
-						<th width="10%">Code</th>
-						<th width="10%">Origin</th>
-					  </tr>
-					 </table>
-				</span>
-				</span>
-		</div>
-		
-		<div style="display:none;" id ="Boxart"></div>
-		
-		
-		</div>
-		<div id="tmdbAttribution" style="clear:left;padding-top:4em;margin-top:3em;padding-left:2em;width:100%;display:none;" >
-			<img style="display:inline-block" width="208px" height="60px"  src="https://assets.tmdb.org/images/logos/var_2_1_PoweredByTMDB_Blk_Logo_Bree.png"><p style="display:inline-block;" class="muted"><small>This product uses the TMDb API but is not endorsed or certified by TMDb.</small></p>
-		</div>
 	</body>
 
 </html>

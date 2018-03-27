@@ -75,6 +75,7 @@ function getSeasons() {
 		
 		//save this shows data
 		saveShow(allShowQueries[thisShowIndex]);
+		tableRow("summaryTable2", "getSeasons", "saving XMLDoc", allShowQueries[thisShowIndex].sTitle);
 		xmlDoc.save(saveFile);
 		
 		//next show index
@@ -199,7 +200,9 @@ function parseSeasonResults(json) {
 			//Make sure this episode is in this season worth of data
 			if (epi.sSeason == allShowQueries[thisShowIndex].sSeasons[thisSeasonIndex]) {
 				epi.sOverview = json.episodes[epi.sEpisode - 1].overview || "No overview available.";
-				epi.sTitle = json.episodes[epi.sEpisode - 1].name || "No title";
+				epi.sTitle = json.episodes[epi.sEpisode - 1].name || "Episode";
+				epi.sRating = json.episodes[epi.sEpisode - 1].vote_average || 0;
+				epi.sVoteCount = json.episodes[epi.sEpisode - 1].vote_count || 0;
 			}
 		}
 	/*}
