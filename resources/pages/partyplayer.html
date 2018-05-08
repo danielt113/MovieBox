@@ -1,3 +1,7 @@
+<div class="navbar">
+  <a href="#home">Close</a>
+</div>
+
 <h1 id="h1Content"><span id = "divDialogue"></span> <small id="initSmall" class="muted" style=""></small></h1>
 
 <video style="padding-top:1em;" id="vid" width="1280" height="720" autostart="true"  controls="controls">
@@ -6,4 +10,19 @@
 <br/>
 Your party:<input id="partyID" type="text" value="" class="btn-secondary" > </input><br>Last status:<input id="statusBox" type="text" value="" class="btn-secondary"></input>
 <br/>
+<label for="partydebug"><input onclick="this.checked?$('#partyTableDiv').show():$('#partyTableDiv').hide()" id="partydebug" type="checkbox"></input> Debugging mode</label><br>
+<br/>
 <input onclick="$('#Search').val('');filterMovies(document.getElementById('Search'))" type="button" value="Back" class="btn-secondary"/>
+
+<div id="partyTableDiv" style="display:none;">
+		<h3 style="color:red">Debug</h3>
+		<table style="" id="partyTable">
+			  <tr>
+				<th>Function</th>
+				<th>Status</th>
+				<th>P1</th>
+				<th>P2</th>
+				<th>P3</th>
+			  </tr>
+			</table>
+		</div>

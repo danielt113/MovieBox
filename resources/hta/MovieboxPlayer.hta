@@ -1,0 +1,120 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+<hta:application
+ID="objHTA"
+   caption = "no"
+   windowState = "maximize"
+/>
+
+<meta http-equiv="x-ua-compatible" content="ie=9" />
+
+<!-- CSS -->
+<link type="text/css" rel="stylesheet" href="../css/main.css"></link>
+
+<!-- JQuery -->
+<script type="text/javascript" language="javascript" src="../script/jquery.min.js"></script>
+
+<!-- Party stuff -->
+<script type="text/javascript" language="javascript" src="../script/Inline-functions.js"></script>
+<script type="text/javascript" language="javascript" src="../script/party.js"></script>
+
+<title>MovieBox Player</title>
+
+<script>
+//objHTA.windowState = "normal";
+</script>
+
+</head>
+
+<body>
+<div class="navbar">
+<a class="close" onclick="window.close()">X</a>
+  <!-- <a><div class="maximize"><div class="square"><div class="square2"></div></div></div></a> -->
+  
+</div>
+	<!-- <h1 id="h1Content"><span id = "divDialogue">Party player</span> <small id="initSmall" class="muted" style=""></small></h1> -->
+
+	<h4><span id="h1text"></span><span id="partyID"></span></h4>
+	
+	<video style="padding-top:1em;" id="vid" width="1280" height="720" autostart="true"  controls="controls">
+	<source src="" type="video/mp4"></video>
+
+	<p>
+	<label for="partydebug"><input onclick="this.checked?$('#partyTableDiv').show():$('#partyTableDiv').hide()" id="partydebug" type="checkbox"></input> Debugging mode</label></p>
+	
+	<p><input onclick="window.close()" type="button" value="Close" class="btn-secondary"/></p>
+
+	<div id="partyTableDiv" style="display:none;">
+	
+		<h4 style="color:red">Debug</h4>
+		<p>Status: <span id="statusBox"></span>
+		<br>Connection: <span id="connectionBox" ></span></p>
+		<table style="" id="partyTable">
+			  <tr>
+				<th>Function</th>
+				<th>Status</th>
+				<th>P1</th>
+				<th>P2</th>
+				<th>P3</th>
+			  </tr>
+			</table>
+		</div>
+</body>
+
+<script>
+window.onload = function() {
+	var args = objHTA.commandLine.split(" ");
+	
+	$("#vid").get(0).src = unescape(args[args.length-2]);
+	//alert(unescape(args[args.length-2]));
+	
+	$("#vid").get(0).pause();
+	
+	if (args[args.length-1] !== "new") {
+		$("#partyID").text(args[args.length-1]);
+		joinParty();
+	}
+	else {
+		
+		var xhttp = new XMLHttpRequest();
+		
+		$("#partyID").text("Party starting...");
+		//setTimeout(function(){$("#partyID").text("The party server is booting up...");}, 3000);
+		
+		xhttp.onreadystatechange = function() {
+
+			if (this.readyState == 4 && this.status == 200) {
+
+			var j = JSON.parse(xhttp.responseText);
+			
+			if (j.queryStatus == "error") {
+				$("#statusBox").text("Something went wrong");
+				return;
+			}
+			
+			//success, use xhttp.responseText
+			$("#partyID").text(j.party);
+			$("#h1text").text("Party: ");
+			//$("#partyID").val(xhttp.responseText);
+			joinParty();
+
+			}
+
+			if (this.readyState == 4 && this.status !== 200) {
+
+			$("#partyID").text("Oops, try F5 to try to start the party again");
+
+			}
+		}
+		
+		xhttp.open("POST", "http://movieboxparty.herokuapp.com/start?movie-name=the%20wolf%20of%20wall%20street&timestamp="+$("#vid").get(0).currentTime, true);
+
+		xhttp.send();
+	}
+	
+}
+</script>
+
+</html>

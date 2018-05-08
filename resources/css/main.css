@@ -7,6 +7,9 @@ body {
 	font-size: 125%;
 	color: #003300;
 }
+
+
+
 .error {
 	color: red;
 }
@@ -613,4 +616,58 @@ outline:0;
 }
 div.episodeSeasonDiv .select-style:nth-child(1) {
 	margin-right: 10px;
+}
+
+.navbar {
+  overflow: hidden;
+  /*background-color: #333;*/
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height:1.5em;
+}
+
+.navbar a.close {
+  float: right;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 6px 15px;
+  text-decoration: none;
+  font-size: 16px;
+  background-color: darkgray;
+}
+.maximize {
+  width:30px;
+  height:30px;
+  float: right;
+  display: block;
+  background-color: darkgray;
+}
+.maximize .square {
+  width:19px;
+  height:16px;
+  float:centre;
+   margin: 0 auto;
+   margin-top:5px;
+  
+  border-top: 1px solid white;
+  border-right: 1px solid white;
+}
+.maximize .square2 {
+  width:14px;
+  height:14px;
+  float:centre;
+   margin: 0 auto;
+   margin-top:5px;
+  border: 1px solid white;
+}
+.maximize:hover {
+  background-color: darkblue;
+  cursor:pointer;
+}
+
+.navbar a.close:hover {
+  background-color: darkred;
+  cursor:pointer;
 }

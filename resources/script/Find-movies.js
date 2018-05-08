@@ -145,12 +145,13 @@ function listFiles(dir) {
 		allLibraries[iLibrary].sFiles++;
 		s = fc.item();
 		//if file is a movie file
-		if (knownExtensions.indexOf('.' + /[^.]+$/.exec(s) + '.') > -1) {
+		if (knownExtensions.indexOf('.' + /[^.]+$/.exec(s) + '.') > -1 && (s.size / 1048576) > 50) {
 			iFoundCount++;
 			orig = /([^\\]+)$/.exec(s)[1].slice(0, -4);
 			name = cleanFileName(orig, s);
 			
 			//tableRow("summaryTable2", "listFiles", "add file", allLibraries[iLibrary].sDirectory, orig, name);
+			//tableRow("summaryTable2", "listFiles", "add file", orig, name, s.size);
 			
 			if ((orig.indexOf('720p') > -1) || (orig.indexOf('720i') > -1))
 				theQual = 'is720p'; //is720p is actually the CSS class name (can't start with a number)

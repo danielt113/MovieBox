@@ -1,13 +1,25 @@
 <!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<HTA:APPLICATION 
-			icon="app.ico" 
-			maximizeButton="yes" 
-			minimizeButton="yes" 
-			navigable="yes"
-			CONTEXTMENU="yes"
-			/> 
+		 <HTA:APPLICATION ID="xxx"
+  APPLICATIONNAME="xxx"
+  BORDER="none"
+  BORDERSTYLE="normal"
+  CAPTION="yes"
+  CONTEXTMENU="yes"
+  ICON="images/myworkspace.ico"
+  INNERBORDER="yes"
+  MAXIMIZEBUTTON="yes"
+  MINIMIZEBUTTON="yes"
+  NAVIGABLE="yes"
+  SCROLL="yes"
+  SCROLLFLAT="no"
+  SELECTION="yes"
+  SHOWINTASKBAR="yes"
+  SINGLEINSTANCE="yes"
+  SYSMENU="yes"
+  VERSION="1.0"
+  WINDOWSTATE="normal" />
 		<title>MovieBox</title>
 		
 		<!-- Needed to make drop down menu work, from: http://stackoverflow.com/questions/13284083/ie10-renders-in-ie7-mode-how-to-force-standards-mode -->
@@ -42,6 +54,9 @@
 		
 		<!-- Movie finding -->
 		<script type="text/javascript" language="javascript" src="resources/script/Find-movies.js"></script>
+		
+		<!-- Party stuff -->
+		<script type="text/javascript" language="javascript" src="resources/script/party.js"></script>
 		
 		<!-- Starting function -->
 		<script type="text/javascript" language="javascript" src="resources/script/Init.js"></script>
